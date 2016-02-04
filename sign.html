@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="signup1.css" rel="stylesheet"/>
+	<script src="jquery-2.1.1.min.js"></script>
+	<script src="signup.js"></script>
+	<script>
+		function checkSignUp(fn,ln,em,pw,rpw,ad,mob,city,pin,bl){
+			/*fetching the element by id and its corresponding value(in the field)*/
+			var flag=0;
+			var fnv=$(document.getElementById(fn)).val();
+			var lnv=$(document.getElementById(ln)).val();
+			var emv=$(document.getElementById(em)).val();
+			var pwv=$(document.getElementById(pw)).val();
+			var rpwv=$(document.getElementById(rpw)).val();
+			var adv=$(document.getElementById(ad)).val();
+			var mobv=$(document.getElementById(mob)).val();
+			var cityv=$(document.getElementById(city)).val();
+			var pinv=$(document.getElementById(pin)).val();
+			var blv=document.getElementById(bl);
+			//checking for empty fields
+			if(fnv==""||lnv==""||emv==""||pwv==""||rpwv==""||adv==""||mobv==""||cityv==""||pinv=="")
+			{
+				//	alert("hi");
+				$(blv).show();
+			}
+			else
+			{	
+				$(blv).hide();
+				//email id validation
+				var mail = /^\w+[\w\-\.\+]*@[a-zA-Z0-9\.\-]+\.[a-z]{2,4}$/;
+				var name_exp=/^[a-zA-Z]+$/;
+				if(!name_exp.test(fnv)||!name_exp.test(lnv))
+				{
+					$("#iname").show();
+				}
+				else{
+					$("#iname").hide();
+				}
+				if (mail.test(emv))
+				{	
+					flag++;
+					$("#email-id").hide();
+				}
+				else
+				{
+					$("#email-id").show();
+					flag--;
+				}
+				//password and repeat password match
+				if(pwv.length<8)
+				{
+					alert("Password too short");
+				}
+				if(pwv==rpwv)
+				{
+					flag++;
+					$("#pass-div").hide();
+				}
+				else	
+				{
+					flag--;
+					$("#pass-div").show();
+				}
+				//mobile number validation
+				if(mobv.length==10 && $.isNumeric(mobv)&&(mobv[0]==7||mobv[0]==8||mobv[0]==9))
+				{
+					flag++;
+					$("#mob-div").hide();
+				}
+				else
+				{
+					flag--;
+					$("#mob-div").show();
+				}
+				//pincode validation	
+				if(pinv.length==6 && $.isNumeric(pinv))
+				{
+					flag++;
+					$("#pin-div").hide();
+				}
+				else
+				{
+					flag--;
+					$("#pin-div").show();
+				}
+				if(flag==4)
+				{
+					$.post("signupp.php",{f_name:fnv,l_name:lnv,e_mail:emv,p_wd:pwv,address:adv,mob_num:mobv,city_name:cityv,pin_code:pinv},function(data){
+						//checking if email id is already registered or not
+						if(data==0)
+							$("#email-reg").show();
+						else	
+						{
+							$("#email-reg").hide();
+						}
+					
+					});
+				}
+				
+			}
+		}
+	</script>
+	<link href="http://fonts.googleapis.com/css?family=Oswald|Lobster|Pacifico|Quicksand|Exo|Crafty Girls|Righteous|Open Sans|Roboto|Abel" rel="stylesheet"/>
+	<title>Create your Account</title>
+</head>
+<body>
+	<div id="create">
+		Create your e-Wagon Account		
+	</div>
+	<div id="back">	
+		<h3 id="name">Name</h3>
+		<h3 id="mail">Email</h3>
+		<h3 id="pass">Password</h3>
+		<h3 id="rpass">Repeat Password</h3>
+		<h3 id="a_ddr">Address</h3>
+		<h3 id="mob_n">Mobile Number</h3>
+		<h3 id="city_n">Country</h3>
+		<h3 id="date_n">DOB</h3>
+		<h3 id="blank">*No field should be left empty</h3>
+		<h3 id="iname">*Invalid name</h3>
+		<h3 id="email-id">*Invalid email</h3>
+		<h3 id="pass-div">*Passwords do not match</h3>
+		<h3 id="pass-short">*Password too short</h3>
+		<h3 id="mob-div">*Invalid mobile number</h3>
+		<h3 id="pin-div">*Pincode does not exist</h3>
+		<h3 id="details">*Invalid details</h3>
+		<h3 id="date_div">*Invalid date</h3>
+		<h3 id="email-reg">*Email id already registered</h3>
+		<form action="hello" method="GET" id="createacc">
+			<input type="text" id="fname" name="f_name" placeholder="First" required autocomplete="off"/>
+			<input type="text" id="lname" name="l_name" placeholder="Last" required autocomplete="off"/>
+			<input type="text" id="email" name="e_mail" required autocomplete="off"/>
+			<input type="password" id="pwd" name="p_wd" required />
+			<input type="password" id="rpwd" name="r_pwd" required />
+			<input type="text" id="addr" name="address" required autocomplete="off"/>
+			<input type="text" id="mob" name="mob_num" maxlength="10" required autocomplete="off"/>
+			<select id="nation">
+				<option value="India">India</option>
+				<option value="India">South Africa</option>
+				<option value="India">Australia</option>
+				<option value="India">New Zealand</option>
+				<option value="India">England</option>
+				<option value="India">Pakistan</option>
+				<option value="India">USA</option>
+				<option value="India">Greece</option>
+				<option value="India">China</option>
+				<option value="India">Japan</option>
+			</select>
+			<!--<input type="" id="city" name="city_name" required autocomplete="off"/>-->
+			<input type="date" name="date" id="date"/>
+			<input type="submit" id="sign_button" value="Sign up">
+		</form>
+	</div>
+	<div id="line"></div>
+	<div id="save_d"><h3 id="save_t">SAVE</h3></div>
+	<div id="focus"></div>
+	<div id="glow"></div>
+	<div id="save"><h3 id="s_t">Save</h3></div>
+	<img src="3.gif" width="25px" height="25px" id="loading"/>
+</body>
+</html>
